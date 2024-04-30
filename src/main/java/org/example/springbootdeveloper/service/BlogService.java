@@ -6,6 +6,7 @@ import org.example.springbootdeveloper.dto.AddArticleRequest;
 import org.example.springbootdeveloper.dto.UpdateArticleRequest;
 import org.example.springbootdeveloper.repository.BlogRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +18,8 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
 
-    public Article save(AddArticleRequest request) {
-        return blogRepository.save(request.toEntity());
+    public Article save(AddArticleRequest request, String userName) {
+        return blogRepository.save(request.toEntity(userName));
     }
 
     public List<Article> findAll() {
@@ -31,14 +32,27 @@ public class BlogService {
     }
 
     public void delete(Long id) {
+        Article article = findById(id);
+
+        authorizeArticleAuthor(article);
         blogRepository.deleteById(id);
     }
 
     @Transactional
     public Article update(Long id, UpdateArticleRequest request) {
         Article article = findById(id);
+
+        authorizeArticleAuthor(article);
         article.update(request.getTitle(), request.getContent());
         return article;
+    }
+
+
+    private static void authorizeArticleAuthor(Article article) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!userName.equals(article.getAuthor())) {
+            throw new IllegalArgumentException("not authorized");
+        }
     }
 
 }

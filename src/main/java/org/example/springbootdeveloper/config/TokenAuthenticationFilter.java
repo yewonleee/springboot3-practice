@@ -32,7 +32,7 @@ public class TokenAuthenticationFilter  extends OncePerRequestFilter {
         String token = getAccessToken(authorizationHeader);
         // 가져온 토큰이 유효한지 확인, 유효할 때는 인증 정보 설정
         if (tokenProvider.validToken(token)) {
-            Authentication authentication = tokenProvider.getAuthentification(token);
+            Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

@@ -88,7 +88,7 @@ public class TokenProviderTest {
                 .createToken(jwtProperties);
 
         // when
-        Authentication authentication = tokenProvider.getAuthentification(token);
+        Authentication authentication = tokenProvider.getAuthentication(token);
         // then
         assertThat(((UserDetails) authentication.getPrincipal()).getUsername()).isEqualTo(email);
     }

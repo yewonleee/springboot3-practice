@@ -12,13 +12,13 @@ public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false)
+    @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
     public RefreshToken(Long userId, String refreshToken) {
@@ -26,8 +26,9 @@ public class RefreshToken {
         this.refreshToken = refreshToken;
     }
 
-    public RefreshToken RefreshToken(String newRefreshToken) {
+    public RefreshToken update(String newRefreshToken) {
         this.refreshToken = newRefreshToken;
+
         return this;
     }
 
